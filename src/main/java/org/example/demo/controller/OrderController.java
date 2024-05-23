@@ -17,9 +17,9 @@ public class OrderController {
         this.orderRepository = orderRepository;
     }
 
-    @GetMapping
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    @PostMapping
+    public Order createOrder(@RequestBody Order order) {
+        return orderRepository.save(order);
     }
 
     @GetMapping("/{id}")
@@ -27,28 +27,13 @@ public class OrderController {
         return orderRepository.findById(id);
     }
 
-    @PostMapping
-    public Order createOrder(@RequestBody Order order) {
-        return orderRepository.save(order);
-    }
-
-    @PutMapping("/{id}")
-    public Order updateOrder(@PathVariable Long id, @RequestBody Order orderDetails) {
-        Optional<Order> optionalOrder = orderRepository.findById(id);
-        if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
-            order.setDate(orderDetails.getDate());
-            order.setCustomer(orderDetails.getCustomer());
-            order.setProductName(orderDetails.getProductName());
-            order.setAmount(orderDetails.getAmount());
-            return orderRepository.save(order);
-        } else {
-            throw new RuntimeException("Order not found with id " + id);
-        }
+    @GetMapping
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable Long id) {
+    public void deleteOrderById(@PathVariable Long id) {
         orderRepository.deleteById(id);
     }
 }
